@@ -5,6 +5,7 @@ import App from './App'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Verify from './pages/Verify'
+import UserGallery from './pages/UserGallery'
 import AdminDashboard from './pages/AdminDashboard'
 import './index.css'
 
@@ -19,6 +20,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify" element={<Verify />} />
+        <Route path="/gallery" element={<UserGallery />} />
         <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>
