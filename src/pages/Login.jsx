@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Added useEffect
 import { Link, useNavigate } from 'react-router-dom';
 import { authService } from '../lib/authService';
 import { supabase } from '../lib/supabaseClient';
@@ -10,8 +10,19 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // --- ONLY ADDED THIS BLOCK: CAPTURE EMAIL FROM URL ---
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const emailFromUrl = params.get('email');
+
+    if (emailFromUrl) {
+      setEmail(decodeURIComponent(emailFromUrl));
+    }
+  }, []);
+  // -----------------------------------------------------
+
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevents page refresh
+    e.preventDefault(); 
     console.log("Login attempt started..."); 
     setLoading(true);
 
@@ -34,14 +45,13 @@ export default function Login() {
 
       if (profileError) {
         console.error("Profile Fetch Error:", profileError.message);
-        // If profile isn't found, they might have skipped verification
         alert("Profile not found. Did you verify your email?");
       } else {
         console.log("Role found:", profile.role);
         if (profile.role === 'admin' || profile.role === 'staff') {
           navigate('/admin');
         } else {
-          navigate('/home'); // Change this to match your App.jsx route
+          navigate('/home'); 
         }
       }
     } catch (err) {
@@ -68,6 +78,8 @@ export default function Login() {
                 type="email" required
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                 placeholder="name@business.com"
+                // UPDATED: Added value={email} to allow the auto-fill to show up
+                value={email} 
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -81,6 +93,7 @@ export default function Login() {
                 type="password" required
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                 placeholder="••••••••"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
